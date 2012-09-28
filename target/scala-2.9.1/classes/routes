@@ -1,0 +1,61 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Admin - insert App ver&url
+GET     /urlUpdate/*user_idx/*ver/*url              controllers.ProtoApp.urlUpdate(user_idx, ver, url)
+
+# check update and sign up
+
+POST    /checkUpdate              controllers.Application.checkUpdate()
+GET     /checkUpdate/*user_idx/*udid/*ver              controllers.ProtoApp.checkUpdate(user_idx, udid, ver)
+
+# request content list 
+POST     /contentList             controllers.Application.contentList(user_idx, udid, content_idx, pSize)
+GET     /contentList/*user_idx/*udid/*content_idx/*pSize        controllers.ProtoApp.contentList(user_idx, udid, content_idx, pSize)
+
+# request content Detail 
+POST     /contentDetail             controllers.Application.contentDetail(user_idx, udid, content_idx)
+
+# request content Replies 
+POST     /contentReplies             controllers.Application.contentReplies(user_idx, udid, content_idx, laReDate, rSize)
+GET     /contentReplies/*user_idx/*udid/*content_idx/*laReDate/*rSize             controllers.ProtoApp.contentReplies(user_idx, udid, content_idx, laReDate, rSize)
+
+# upload content
+POST     /contentUpload            controllers.Application.contentUpload(user_idx, udid, title, content, busTag, isNotice)
+GET     /contentUpload/*user_idx/*udid/*title/*content/*busTag/*isNotice            controllers.ProtoApp.contentUpload(user_idx, udid, title, content, busTag, isNotice)
+
+# upload Reply
+POST     /replyUpload            controllers.Application.replyUpload(user_idx, udid, content_idx, content)
+GET     /replyUpload/*user_idx/*udid/*content_idx/*content            controllers.ProtoApp.replyUpload(user_idx, udid, content_idx, content)
+
+
+# upload user's profile
+POST     /profileUpload            controllers.Application.profileUpload(user_idx, udid, nickname, gender, memo)
+GET      /profileUpload/*user_idx/*udid/*nickname/*gender/*memo            controllers.ProtoApp.profileUpload(user_idx, udid, nickname, gender, memo)
+
+# request search
+#POST     /search              controllers.Application.search(user_idx, udid, word, mode, pSize)
+
+# recommand
+POST     /recommand              controllers.Application.recommand(user_idx, udid, content_idx)
+
+# update content
+POST     /contentUpdate            controllers.Application.contentUpdate(user_idx, udid, title, content, busTag, isNotice)
+GET     /contentUpdate            controllers.ProtoApp.contentUpdate(user_idx, udid, title, content, busTag, isNotice)
+
+# delete content
+#POST     /contentDelete            controllers.Application.contentDelete(user_idx, udid, content_idx)
+
+# delete reply
+POST     /replyDelete              controllers.Application.replyDelete(user_idx, udid, content_idx, reDate)
+
+
+
+
