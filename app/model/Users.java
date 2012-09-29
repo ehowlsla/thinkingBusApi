@@ -83,7 +83,7 @@ public class Users extends Model {
 		return find.where().eq("udid", udid).findUnique();
 	}
 	
-	public static Users update (String user_idx, String udid, String nickname, String gender, String memo) {
+	public static Users update (String user_idx, String udid, String nickname, String gender, String memo, String imageURL) {
 		Users user = null;
 		if(Users.getUser(user_idx, nickname) == null)
 		{
@@ -92,6 +92,8 @@ public class Users extends Model {
 			user.nickname = nickname;
 			user.gender = gender.charAt(0);
 			user.memo = memo;
+			if(imageURL != null)
+				user.imageURL = imageURL;
 			//이미지 업로
 			
 			user.update();

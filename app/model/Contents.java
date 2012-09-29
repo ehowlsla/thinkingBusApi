@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.avaje.ebean.Expr;
+
 import play.data.format.Formats;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
@@ -35,6 +37,8 @@ public class Contents extends Model{
 	public int recCount;
 	
 	public int viewCount;
+	
+	public int replyCount;
 	
 	@Column(columnDefinition = "char(1)")
 	public char status;
@@ -71,13 +75,55 @@ public class Contents extends Model{
 	}
 	
 	public static List<Contents> getContentList (String user_idx, String udid, String content_idx, String pSize) {
-//		List<Contents> result = null;
+		if(content_idx.equals("0"))
+			return find.where().orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+		else
+			return find.where().lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+	}
+	
+	public static List<Contents> getContentListBySearch (String user_idx, String udid, String content_idx, String word, String mode, String pSize) {
+		// 버스노선 1
+		// 내용기반 2
+		// 최신순 3
+		// 추천순 4
+		// 내가 쓴 글 보기 5
+		switch(Integer.parseInt(mode)) {
+			case 1:
+				if(content_idx.equals("0"))
+					return find.where().ilike("busTag", "%" + word + "%")
+							.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+				else			
+					return find.where().lt("id", Integer.valueOf(content_idx)).ilike("busTag", "%" + word + "%")
+					.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			case 2:
+				if(content_idx.equals("0"))
+					return find.where().or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%"))
+							.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+				else
+					return find.where().lt("id", Integer.valueOf(content_idx)).or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%"))
+						.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			case 3:
+				if(content_idx.equals("0"))
+					return find.where().orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+				else
+					return find.where().lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			case 4:
+				if(content_idx.equals("0"))
+					return find.where().orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+				else
+					return find.where().lt("id", Integer.valueOf(content_idx)).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			case 5:
+				if(content_idx.equals("0"))
+					return find.where().eq("user_id", user_idx).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+				else
+					return find.where().lt("id", Integer.valueOf(content_idx)).eq("user_id", user_idx).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+				
+		}
 		
 		if(content_idx.equals("0"))
 			return find.where().orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
 			return find.where().lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
-//		return result;
 	}
 	
 	
@@ -87,6 +133,14 @@ public class Contents extends Model{
 	
 	public static Contents getContent (String user_idx, String udid, String title, String content, String busTag, String isNotice) {
 		return find.where().eq("user_id", Long.valueOf(user_idx)).eq("title", title).eq("contents", content).eq("bus_tag", busTag).eq("is_notice", isNotice).findUnique();
+	}
+	
+	public static Contents getContentDetail (String user_idx, String udid, String content_idx) {
+		Contents contents = Contents.getContentDetail(user_idx, udid, content_idx);
+		int viewCount = contents.viewCount;
+		contents.viewCount = viewCount + 1;
+		contents.update();
+		return contents;
 	}
 	
 	public static Contents upload (String user_idx, String udid, String title, String content, String busTag, String isNotice) {
@@ -101,11 +155,12 @@ public class Contents extends Model{
 		return contents;
 	}
 	
-	public static Contents update (String user_idx, String udid, String content_idx, String title, String content, String isNotice) {
+	public static Contents update (String user_idx, String udid, String content_idx, String title, String content, String busTag, String isNotice) {
 		Contents contents = Contents.getContent(content_idx);
 		if(user_idx.equals(String.valueOf(contents.user.id)) && udid.equals(contents.user.udid)) {
 			contents.title = title;
 			contents.contents = content;
+			contents.busTag = busTag;
 			contents.isNotice = isNotice.charAt(0);
 			contents.update();
 			//이미지 로직 체크 

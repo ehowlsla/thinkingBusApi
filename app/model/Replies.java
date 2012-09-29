@@ -51,21 +51,25 @@ public class Replies extends Model {
 			return find.where().eq("content_id", Long.parseLong(content_idx)).lt("create_date", Integer.valueOf(laReDate)).orderBy("create_date asc").findPagingList(Integer.valueOf(rSize)).getPage(0).getList();
 	}
 	
-	public static Replies getContentReply (String user_idx, String udid, String content_idx, String content) {
+	public static Replies getContentReplyByContent (String user_idx, String udid, String content_idx, String content) {
 		return find.where().eq("user_id", Long.valueOf(user_idx)).eq("content_id", Long.valueOf(content_idx)).eq("reply_contents", content).eq("status", "Y").findUnique();
 	}
 	
-	public static Replies getContentReply (String user_idx, String udid, String content_idx) {
-		return find.where().eq("user_id", Long.valueOf(user_idx)).eq("content_id", Long.valueOf(content_idx)).findUnique();
+	public static Replies getContentReplyByTime (String user_idx, String udid, String content_idx, String reDate) {
+		return find.where().eq("user_id", Long.valueOf(user_idx)).eq("content_id", Long.valueOf(content_idx)).eq("create_date", reDate).findUnique();
 	}
 	
 	
 	public static Replies upload (String user_idx, String udid, String content_idx, String content) {
 		Replies reply = null;
-		if(Replies.getContentReply(user_idx, udid, content_idx, content) == null)
+		if(Replies.getContentReplyByContent(user_idx, udid, content_idx, content) == null)
 		{
 			Users user = Users.getUserId(user_idx, udid);
 			Contents contents = Contents.getContent(content_idx);
+			int replyCount = contents.replyCount;
+			contents.replyCount = replyCount + 1;
+			contents.update();
+			
 			reply = new Replies(user, contents, content);
 			reply.save();
 		}
@@ -73,10 +77,10 @@ public class Replies extends Model {
 	}
 	
 	public static Replies delete (String user_idx, String udid, String content_idx, String reDate) {
-		Replies reply = null;
-		if(Replies.getContentReply(user_idx, udid, content_idx) == null)
-		{
-		
+		Replies reply = Replies.getContentReplyByTime(user_idx, udid, content_idx, reDate);
+		if(user_idx.equals(String.valueOf(reply.user.id)) && udid.equals(reply.user.udid)) {
+			reply.status = 'N';
+			reply.update();
 		}
 		return reply;
 	}
