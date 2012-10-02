@@ -14,6 +14,7 @@ public class ContentsObj {
 	public Date createDate;
 	public int recCount;	
 	public int viewCount;
+	public int replyCount;
 	public char status;
 	public char isBest;
 	public char isNotice;
@@ -28,6 +29,7 @@ public class ContentsObj {
 		this.createDate = contents.createDate;
 		this.recCount = contents.recCount;
 		this.viewCount = contents.viewCount;
+		this.replyCount = contents.replyCount;
 		this.status = contents.status;
 		this.isBest = contents.isBest;
 		this.isNotice = contents.isNotice;

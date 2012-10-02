@@ -69,6 +69,7 @@ public class Contents extends Model{
 		this.status = 'Y';
 		this.isBest = 'N';
 		this.user = user;
+		this.replyCount = 0;
 		this.isNotice = isNotice.charAt(0);
 		
 		//this.imageURL = imageURL;
@@ -78,7 +79,7 @@ public class Contents extends Model{
 		if(content_idx.equals("0"))
 			return find.where().orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
-			return find.where().lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
 	public static List<Contents> getContentListBySearch (String user_idx, String udid, String content_idx, String word, String mode, String pSize) {

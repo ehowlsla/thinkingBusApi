@@ -48,7 +48,7 @@ public class Replies extends Model {
 		if(laReDate.equals("0"))
 			return find.where().eq("content_id", Long.parseLong(content_idx)).orderBy("create_date asc").findPagingList(Integer.valueOf(rSize)).getPage(0).getList();
 		else
-			return find.where().eq("content_id", Long.parseLong(content_idx)).lt("create_date", Integer.valueOf(laReDate)).orderBy("create_date asc").findPagingList(Integer.valueOf(rSize)).getPage(0).getList();
+			return find.where().eq("content_id", Long.parseLong(content_idx)).gt("create_date", Integer.valueOf(laReDate)).orderBy("create_date asc").findPagingList(Integer.valueOf(rSize)).getPage(0).getList();
 	}
 	
 	public static Replies getContentReplyByContent (String user_idx, String udid, String content_idx, String content) {

@@ -19,6 +19,7 @@ import model.Recommands;
 import model.Replies;
 import model.Users;
 
+import play.api.mvc.MultipartFormData;
 import play.mvc.*;
 import play.mvc.Http.MultipartFormData.FilePart;
 import responseObj.CheckUpdateObj;
@@ -49,7 +50,8 @@ public class Application extends Controller {
 	}
   
   public static Result checkUpdate () {
-		Map<String, String[]> params = request().body().asFormUrlEncoded();
+	    Map<String, String[]> params = request().body().asFormUrlEncoded();
+	  
 
 		String user_idx = params.get("user_idx")[0];
 		String udid = params.get("udid")[0];
@@ -60,7 +62,7 @@ public class Application extends Controller {
 		CheckUpdateObj checkUpdateObj = new CheckUpdateObj(
 				String.valueOf(user.id), appURL.ver == null ? "" : appURL.ver,
 				appURL.downloadURL == null ? "" : appURL.downloadURL);
-
+		
 		return ok(new Gson().toJson(checkUpdateObj));
   } 
   
@@ -115,16 +117,24 @@ public class Application extends Controller {
 	}
 
 	public static Result contentUpload() {
-		Map<String, String[]> params = request().body().asFormUrlEncoded();
-
-		String user_idx = params.get("user_idx")[0];
-		String udid = params.get("udid")[0];
-		String title = params.get("title")[0];
-		String content = params.get("content")[0];
-		String busTag = params.get("busTag")[0];
-		String isNotice = params.get("isNotice")[0];
+		
+		String user_idx = null;
+		String udid = null;
+		String title = null;
+		String content = null;
+		String busTag = null;
+		String isNotice = null;
 		
 		if(request().body().asMultipartFormData() != null) {
+			Map<String, String[]> params = request().body().asMultipartFormData().asFormUrlEncoded();
+
+			user_idx = params.get("user_idx")[0];
+			udid = params.get("udid")[0];
+			title = params.get("title")[0];
+			content = params.get("content")[0];
+			busTag = params.get("busTag")[0];
+			isNotice = params.get("isNotice")[0];
+			
 			List<FilePart> uploadFiles = request().body().asMultipartFormData().getFiles();
 			int imageNum = 1;
 			String imageURL = null;
