@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -71,8 +73,17 @@ public class ProtoApp extends Controller {
 
 	public static Result contentReplies(String user_idx, String udid,
 			String content_idx, String laReDate, String rSize) {
+		DateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = null;
+		try {
+			date = sdFormat.parse(rSize);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		List<Replies> replies = Replies.getContentReplies(user_idx, udid,
-				content_idx, laReDate, rSize);
+				content_idx, date, rSize);
 		List<RepliesObj> result = new LinkedList<RepliesObj>();
 		for (Replies reply : replies) {
 			result.add(new RepliesObj(reply));
