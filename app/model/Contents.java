@@ -137,7 +137,7 @@ public class Contents extends Model{
 	}
 	
 	public static Contents getContentDetail (String user_idx, String udid, String content_idx) {
-		Contents contents = Contents.getContentDetail(user_idx, udid, content_idx);
+		Contents contents = Contents.getContent(content_idx);
 		int viewCount = contents.viewCount;
 		contents.viewCount = viewCount + 1;
 		contents.update();

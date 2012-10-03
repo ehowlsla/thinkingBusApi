@@ -35,7 +35,10 @@ import com.google.gson.Gson;
 
 public class ProtoApp extends Controller {
 
-	
+	public static Result getUserInfo(String user_idx, String udid) {
+
+		return ok(new Gson().toJson(new UsersObj(Users.getUserId(user_idx, udid))));
+	}
 
 	public static Result urlUpdate(String user_idx, String ver, String url) {
 		if (AppDownloadURL.updateURL(ver, url)) {

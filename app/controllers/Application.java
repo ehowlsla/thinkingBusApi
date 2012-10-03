@@ -41,6 +41,14 @@ public class Application extends Controller {
 	public static Result index() {
 		return ok(index.render("Your new application is ready."));
 	}
+	
+	public static Result getUserInfo() {
+		Map<String, String[]> params = request().body().asFormUrlEncoded();
+
+		String user_idx = params.get("user_idx")[0];
+		String udid = params.get("udid")[0];
+		return ok(new Gson().toJson(new UsersObj(Users.getUserId(user_idx, udid))));
+	}
 
 	public static Result urlUpdate(String user_idx, String ver, String url) {
 		if (AppDownloadURL.updateURL(ver, url)) {

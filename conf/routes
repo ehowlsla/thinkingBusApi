@@ -66,6 +66,11 @@ GET       /contentDelete/*user_idx/*udid/*content_idx            controllers.Pro
 POST     /replyDelete              controllers.Application.replyDelete()
 GET     /replyDelete/*user_idx/*udid/*content_idx/*reDate              controllers.ProtoApp.replyDelete(user_idx, udid, content_idx, reDate)
 
+# get User
+POST     /getUserInfo              controllers.Application.getUserInfo()
+GET     /getUserInfo/*user_idx/*udid              controllers.ProtoApp.getUserInfo(user_idx, udid)
+
+
 
 
 
