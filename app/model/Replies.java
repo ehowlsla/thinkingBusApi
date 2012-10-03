@@ -45,7 +45,7 @@ public class Replies extends Model {
 	
 	
 	public static List<Replies> getContentReplies (String user_idx, String udid, String content_idx, Date laReDate, String rSize) {
-		if(laReDate.equals("0"))
+		if(laReDate == null)
 			return find.where().eq("content_id", Long.parseLong(content_idx)).orderBy("create_date asc").findPagingList(Integer.valueOf(rSize)).getPage(0).getList();
 		else
 			return find.where().eq("content_id", Long.parseLong(content_idx)).gt("create_date", laReDate).orderBy("create_date asc").findPagingList(Integer.valueOf(rSize)).getPage(0).getList();

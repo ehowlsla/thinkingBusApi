@@ -37,11 +37,11 @@ import views.html.*;
 import com.google.gson.Gson;
 
 public class Application extends Controller {
-  
-  public static Result index() {
-    return ok(index.render("Your new application is ready."));
-  }
-  
+
+	public static Result index() {
+		return ok(index.render("Your new application is ready."));
+	}
+
 	public static Result urlUpdate(String user_idx, String ver, String url) {
 		if (AppDownloadURL.updateURL(ver, url)) {
 			return ok(new Gson().toJson(new ReturnMsg("Y", "ver=" + ver
@@ -50,27 +50,22 @@ public class Application extends Controller {
 			return ok(new Gson()
 					.toJson(new ReturnMsg("N", "failed, check ver.")));
 	}
-  
-  public static Result checkUpdate () {
-	    Map<String, String[]> params = request().body().asFormUrlEncoded();
-	  
+
+	public static Result checkUpdate() {
+		Map<String, String[]> params = request().body().asFormUrlEncoded();
 
 		String user_idx = params.get("user_idx")[0];
 		String udid = params.get("udid")[0];
 		String ver = params.get("ver")[0];
-	
+
 		Users user = Users.getUserId(user_idx, udid);
 		AppDownloadURL appURL = AppDownloadURL.getAppURL(ver);
 		CheckUpdateObj checkUpdateObj = new CheckUpdateObj(
 				String.valueOf(user.id), appURL.ver == null ? "" : appURL.ver,
 				appURL.downloadURL == null ? "" : appURL.downloadURL);
-		
+
 		return ok(new Gson().toJson(checkUpdateObj));
-  } 
-  
-
-
-	 
+	}
 
 	public static Result contentList() {
 		Map<String, String[]> params = request().body().asFormUrlEncoded();
@@ -79,7 +74,7 @@ public class Application extends Controller {
 		String udid = params.get("udid")[0];
 		String content_idx = params.get("content_idx")[0];
 		String pSize = params.get("pSize")[0];
-		
+
 		List<Contents> data = Contents.getContentList(user_idx, udid,
 				content_idx, pSize);
 		List<ContentsObj> result = new LinkedList<ContentsObj>();
@@ -95,7 +90,7 @@ public class Application extends Controller {
 		String user_idx = params.get("user_idx")[0];
 		String udid = params.get("udid")[0];
 		String content_idx = params.get("content_idx")[0];
-		
+
 		return ok(new Gson().toJson(new ContentsObj(Contents.getContentDetail(
 				user_idx, udid, content_idx))));
 	}
@@ -108,17 +103,21 @@ public class Application extends Controller {
 		String content_idx = params.get("content_idx")[0];
 		String laReDate = params.get("laReDate")[0];
 		String rSize = params.get("rSize")[0];
-		
+
 		DateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = null;
-		try {
-			date = sdFormat.parse(rSize);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		if (!laReDate.equals("0")) {
+			try {
+				date = sdFormat.parse(laReDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+
 		
-		
+
 		List<Replies> replies = Replies.getContentReplies(user_idx, udid,
 				content_idx, date, rSize);
 		List<RepliesObj> result = new LinkedList<RepliesObj>();
@@ -129,16 +128,17 @@ public class Application extends Controller {
 	}
 
 	public static Result contentUpload() {
-		
+
 		String user_idx = null;
 		String udid = null;
 		String title = null;
 		String content = null;
 		String busTag = null;
 		String isNotice = null;
-		
-		if(request().body().asMultipartFormData() != null) {
-			Map<String, String[]> params = request().body().asMultipartFormData().asFormUrlEncoded();
+
+		if (request().body().asMultipartFormData() != null) {
+			Map<String, String[]> params = request().body()
+					.asMultipartFormData().asFormUrlEncoded();
 
 			user_idx = params.get("user_idx")[0];
 			udid = params.get("udid")[0];
@@ -146,8 +146,9 @@ public class Application extends Controller {
 			content = params.get("content")[0];
 			busTag = params.get("busTag")[0];
 			isNotice = params.get("isNotice")[0];
-			
-			List<FilePart> uploadFiles = request().body().asMultipartFormData().getFiles();
+
+			List<FilePart> uploadFiles = request().body().asMultipartFormData()
+					.getFiles();
 			int imageNum = 1;
 			String imageURL = null;
 			String s_imageURL = null;
@@ -159,9 +160,14 @@ public class Application extends Controller {
 				if (part != null) {
 					File file = part.getFile();
 					Date date = new Date();
-					SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
-					imageURL = "Images/Contents/" + user_idx + "_"+ format.format(date) + "_" + String.valueOf(imageNum) + ".JPG";
-					s_imageURL = "Images/Contents/s_" + user_idx + "_"+ format.format(date) + "_" + String.valueOf(imageNum) +".JPG";
+					SimpleDateFormat format = new SimpleDateFormat(
+							"yyyyMMdd_HHmmss");
+					imageURL = "Images/Contents/" + user_idx + "_"
+							+ format.format(date) + "_"
+							+ String.valueOf(imageNum) + ".JPG";
+					s_imageURL = "Images/Contents/s_" + user_idx + "_"
+							+ format.format(date) + "_"
+							+ String.valueOf(imageNum) + ".JPG";
 					File saveFile = new File(imageURL);
 					FileInputStream is;
 					try {
@@ -170,16 +176,16 @@ public class Application extends Controller {
 						ThumbnailGenerator generator = new ThumbnailGenerator();
 						generator.transform(imageURL, s_imageURL, 320, 320, 1);
 						imageNum++;
-						
-						//content의 내용을 변경해야 한다.
+
+						// content의 내용을 변경해야 한다.
 						int tempStartIndex = startIndex;
 						startIndex = content.indexOf("#image-", tempStartIndex);
 						endIndex = content.indexOf("-image#", tempStartIndex);
-						
-						if(checkIndex < startIndex) {
+
+						if (checkIndex < startIndex) {
 							sb.append(content.substring(startIndex));
 						}
-						
+
 						sb.append("#image-" + s_imageURL + "-image#");
 						startIndex = endIndex + "-image#".length();
 						checkIndex = startIndex;
@@ -193,15 +199,17 @@ public class Application extends Controller {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+
 					content = sb.toString();
 				}
 			}
 		}
-		
-		Contents contents = Contents.upload(user_idx, udid, title, content, busTag, isNotice);
-		if(contents == null)
-			return ok(new Gson().toJson(new ReturnMsg("N","Already Uploaded.")));
+
+		Contents contents = Contents.upload(user_idx, udid, title, content,
+				busTag, isNotice);
+		if (contents == null)
+			return ok(new Gson()
+					.toJson(new ReturnMsg("N", "Already Uploaded.")));
 		else
 			return ok(new Gson().toJson(new ContentsObj(contents)));
 	}
@@ -213,15 +221,16 @@ public class Application extends Controller {
 		String udid = params.get("udid")[0];
 		String content_idx = params.get("content_idx")[0];
 		String content = params.get("content")[0];
-		
+
 		Replies replies = Replies.upload(user_idx, udid, content_idx, content);
-		if(replies == null)
-			return ok(new Gson().toJson(new ReturnMsg("N", "Already Uploaded.")));
+		if (replies == null)
+			return ok(new Gson()
+					.toJson(new ReturnMsg("N", "Already Uploaded.")));
 		else
 			return ok(new Gson().toJson(new RepliesObj(replies)));
 	}
 
-	public static Result profileUpload () {
+	public static Result profileUpload() {
 		Map<String, String[]> params = request().body().asFormUrlEncoded();
 
 		String user_idx = params.get("user_idx")[0];
@@ -229,13 +238,13 @@ public class Application extends Controller {
 		String nickname = params.get("nickname")[0];
 		String gender = params.get("gender")[0];
 		String memo = params.get("memo")[0];
-		
+
 		String imageURL = null;
 		String s_imageURL = null;
-		if(request().body().asMultipartFormData() != null) {
-			List<FilePart> uploadFiles = request().body().asMultipartFormData().getFiles();
-			
-			
+		if (request().body().asMultipartFormData() != null) {
+			List<FilePart> uploadFiles = request().body().asMultipartFormData()
+					.getFiles();
+
 			for (FilePart part : uploadFiles) {
 				if (part != null) {
 					File file = part.getFile();
@@ -261,12 +270,11 @@ public class Application extends Controller {
 				}
 			}
 		}
-		
 
-		UsersObj user = new UsersObj(Users.update(user_idx, udid, nickname, gender, memo, s_imageURL));
+		UsersObj user = new UsersObj(Users.update(user_idx, udid, nickname,
+				gender, memo, s_imageURL));
 		return ok(new Gson().toJson(user));
 	}
-	
 
 	// 버스노선 1
 	// 내용기반 2
@@ -282,13 +290,14 @@ public class Application extends Controller {
 		String word = params.get("word")[0];
 		String mode = params.get("mode")[0];
 		String pSize = params.get("pSize")[0];
-		
-		List<Contents> data = Contents.getContentListBySearch(user_idx, udid, content_idx, word, mode, pSize);
+
+		List<Contents> data = Contents.getContentListBySearch(user_idx, udid,
+				content_idx, word, mode, pSize);
 		List<ContentsObj> result = new LinkedList<ContentsObj>();
 		for (Contents model : data) {
 			result.add(new ContentsObj(model));
 		}
-		
+
 		return ok(new Gson().toJson(result));
 	}
 
@@ -298,7 +307,7 @@ public class Application extends Controller {
 		String user_idx = params.get("user_idx")[0];
 		String udid = params.get("udid")[0];
 		String content_idx = params.get("content_idx")[0];
-		
+
 		Recommands recommands = Recommands.addRecommands(user_idx, content_idx);
 		if (recommands == null)
 			return ok();
@@ -314,7 +323,7 @@ public class Application extends Controller {
 		String user_idx = params.get("user_idx")[0];
 		String udid = params.get("udid")[0];
 		String content_idx = params.get("content_idx")[0];
-		
+
 		if (Recommands.removeRecommands(user_idx, content_idx))
 			return ok(new Gson().toJson(new ReturnMsg("Y", "Success")));
 		else
@@ -331,7 +340,7 @@ public class Application extends Controller {
 		String content = params.get("content")[0];
 		String busTag = params.get("busTag")[0];
 		String isNotice = params.get("isNotice")[0];
-		
+
 		Contents contents = Contents.update(user_idx, udid, content_idx, title,
 				content, busTag, isNotice);
 		ContentsObj result = new ContentsObj(contents);
@@ -344,7 +353,7 @@ public class Application extends Controller {
 		String user_idx = params.get("user_idx")[0];
 		String udid = params.get("udid")[0];
 		String content_idx = params.get("content_idx")[0];
-		
+
 		Contents content = Contents.delete(user_idx, udid, content_idx);
 		ContentsObj result = new ContentsObj(content);
 		return ok(new Gson().toJson(result));
@@ -357,7 +366,7 @@ public class Application extends Controller {
 		String udid = params.get("udid")[0];
 		String content_idx = params.get("content_idx")[0];
 		String reDate = params.get("reDate")[0];
-		
+
 		Replies reply = Replies.delete(user_idx, udid, content_idx, reDate);
 		RepliesObj result = new RepliesObj(reply);
 		return ok(new Gson().toJson(result));
