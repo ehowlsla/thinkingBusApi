@@ -15,6 +15,7 @@ public class Recommands extends Model {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static int numBest = 3;
 
 	 
 	public String user_id;
@@ -52,6 +53,8 @@ public class Recommands extends Model {
 			Contents contents = Contents.getContent(content_id);
 			int recCount = contents.recCount;
 			contents.recCount = recCount + 1;
+			if(contents.recCount >= numBest)
+				contents.isBest = 'Y';
 			contents.update();
 			
 			return recommands;

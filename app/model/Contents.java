@@ -82,6 +82,13 @@ public class Contents extends Model{
 			return find.where().gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
+	public static List<Contents> getBestContentList (String user_idx, String udid, String content_idx, String pSize) {
+		if(content_idx.equals("0"))
+			return find.where().eq("isBest", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+		else
+			return find.where().eq("isBest", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+	}
+	
 	public static List<Contents> getContentListBySearch (String user_idx, String udid, String content_idx, String word, String mode, String pSize) {
 		// 버스노선 1
 		// 내용기반 2

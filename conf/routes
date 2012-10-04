@@ -20,6 +20,10 @@ GET     /checkUpdate/*user_idx/*udid/*ver              controllers.ProtoApp.chec
 POST     /contentList             controllers.Application.contentList()
 GET     /contentList/*user_idx/*udid/*content_idx/*pSize        controllers.ProtoApp.contentList(user_idx, udid, content_idx, pSize)
 
+POST     /bestContentList             controllers.Application.bestContentList()
+GET     /bestContentList/*user_idx/*udid/*content_idx/*pSize        controllers.ProtoApp.bestContentList(user_idx, udid, content_idx, pSize)
+
+
 # request content Detail 
 POST     /contentDetail             controllers.Application.contentDetail()
 GET 	 /contentDetail/*user_idx/*udid/*content_idx             controllers.ProtoApp.contentDetail(user_idx, udid, content_idx)

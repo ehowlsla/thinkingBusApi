@@ -75,6 +75,23 @@ public class Application extends Controller {
 		return ok(new Gson().toJson(checkUpdateObj));
 	}
 
+	public static Result bestContentList() {
+		Map<String, String[]> params = request().body().asFormUrlEncoded();
+
+		String user_idx = params.get("user_idx")[0];
+		String udid = params.get("udid")[0];
+		String content_idx = params.get("content_idx")[0];
+		String pSize = params.get("pSize")[0];
+
+		List<Contents> data = Contents.getBestContentList(user_idx, udid,
+				content_idx, pSize);
+		List<ContentsObj> result = new LinkedList<ContentsObj>();
+		for (Contents model : data) {
+			result.add(new ContentsObj(model));
+		}
+		return ok(new Gson().toJson(result));
+	}
+	
 	public static Result contentList() {
 		Map<String, String[]> params = request().body().asFormUrlEncoded();
 

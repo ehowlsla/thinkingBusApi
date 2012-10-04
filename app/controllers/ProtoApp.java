@@ -67,6 +67,17 @@ public class ProtoApp extends Controller {
 		}
 		return ok(new Gson().toJson(result));
 	}
+	
+	public static Result bestContentList(String user_idx, String udid,
+			String content_idx, String pSize) {
+		List<Contents> data = Contents.getBestContentList(user_idx, udid,
+				content_idx, pSize);
+		List<ContentsObj> result = new LinkedList<ContentsObj>();
+		for (Contents model : data) {
+			result.add(new ContentsObj(model));
+		}
+		return ok(new Gson().toJson(result));
+	}
 
 	public static Result contentDetail(String user_idx, String udid,
 			String content_idx) {
