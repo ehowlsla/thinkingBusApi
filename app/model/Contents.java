@@ -77,16 +77,16 @@ public class Contents extends Model{
 	
 	public static List<Contents> getContentList (String user_idx, String udid, String content_idx, String pSize) {
 		if(content_idx.equals("0"))
-			return find.where().eq("status", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
-			return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
 	public static List<Contents> getBestContentList (String user_idx, String udid, String content_idx, String pSize) {
 		if(content_idx.equals("0"))
-			return find.where().eq("status", "Y").eq("isBest", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").eq("isBest", "Y").orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
-			return find.where().eq("status", "Y").eq("isBest", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").eq("isBest", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
 	public static List<Contents> getContentListBySearch (String user_idx, String udid, String content_idx, String word, String mode, String pSize) {
@@ -99,39 +99,39 @@ public class Contents extends Model{
 			case 1:
 				if(content_idx.equals("0"))
 					return find.where().ilike("busTag", "%" + word + "%").eq("status", "Y")
-							.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+							.orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else			
-					return find.where().gt("id", Integer.valueOf(content_idx)).ilike("busTag", "%" + word + "%").eq("status", "Y")
-					.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().lt("id", Integer.valueOf(content_idx)).ilike("busTag", "%" + word + "%").eq("status", "Y")
+					.orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 2:
 				if(content_idx.equals("0"))
 					return find.where().or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%")).eq("status", "Y")
-							.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+							.orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().gt("id", Integer.valueOf(content_idx)).or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%")).eq("status", "Y")
-						.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().lt("id", Integer.valueOf(content_idx)).or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%")).eq("status", "Y")
+						.orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 3:
 				if(content_idx.equals("0"))
-					return find.where().eq("status", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 4:
 				if(content_idx.equals("0"))
-					return find.where().eq("status", "Y").orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").orderBy("rec_count desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("rec_count desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 5:
 				if(content_idx.equals("0"))
-					return find.where().eq("user_id", user_idx).eq("status", "Y").orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("user_id", user_idx).eq("status", "Y").orderBy("rec_count desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).eq("user_id", user_idx).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).eq("user_id", user_idx).orderBy("rec_count desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				
 		}
 		
 		if(content_idx.equals("0"))
-			return find.where().eq("status", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
-			return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("id desc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
 	
