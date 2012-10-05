@@ -160,6 +160,26 @@ public class Application extends Controller {
 		String content = null;
 		String busTag = null;
 		String isNotice = null;
+		
+		if(request().body().asFormUrlEncoded() != null) {
+			
+			Map<String, String[]> params = request().body().asFormUrlEncoded();
+			
+			user_idx = params.get("user_idx")[0];
+			udid = params.get("udid")[0];
+			title = params.get("title")[0];
+			content = params.get("content")[0];
+			busTag = params.get("busTag")[0];
+			isNotice = params.get("isNotice")[0];
+			
+			Contents contents = Contents.upload(user_idx, udid, title, content,
+					busTag, isNotice);
+			if (contents == null)
+				return ok(new Gson()
+						.toJson(new ReturnMsg("N", "Already Uploaded.")));
+			else
+				return ok(new Gson().toJson(new ContentsObj(contents)));
+		}
 
 		if (request().body().asMultipartFormData() != null) {
 			Map<String, String[]> params = request().body()
@@ -256,17 +276,41 @@ public class Application extends Controller {
 	}
 
 	public static Result profileUpload() {
-		Map<String, String[]> params = request().body().asFormUrlEncoded();
+		
 
-		String user_idx = params.get("user_idx")[0];
-		String udid = params.get("udid")[0];
-		String nickname = params.get("nickname")[0];
-		String gender = params.get("gender")[0];
-		String memo = params.get("memo")[0];
-
+		String user_idx = null;
+		String udid = null;
+		String nickname = null;
+		String gender = null;
+		String memo = null;
 		String imageURL = null;
 		String s_imageURL = null;
+		
+		if (request().body().asFormUrlEncoded() != null) {
+			Map<String, String[]> params = request().body().asFormUrlEncoded();
+
+			user_idx = params.get("user_idx")[0];
+			udid = params.get("udid")[0];
+			nickname = params.get("nickname")[0];
+			gender = params.get("gender")[0];
+			memo = params.get("memo")[0];
+			
+			UsersObj user = new UsersObj(Users.update(user_idx, udid, nickname,
+					gender, memo, s_imageURL));
+			return ok(new Gson().toJson(user));
+		}
+		
 		if (request().body().asMultipartFormData() != null) {
+			
+			Map<String, String[]> params = request().body().asMultipartFormData().asFormUrlEncoded();
+
+			user_idx = params.get("user_idx")[0];
+			udid = params.get("udid")[0];
+			nickname = params.get("nickname")[0];
+			gender = params.get("gender")[0];
+			memo = params.get("memo")[0];
+			
+			
 			List<FilePart> uploadFiles = request().body().asMultipartFormData()
 					.getFiles();
 
