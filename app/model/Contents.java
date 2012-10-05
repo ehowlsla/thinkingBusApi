@@ -101,37 +101,37 @@ public class Contents extends Model{
 					return find.where().ilike("busTag", "%" + word + "%").eq("status", "Y")
 							.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else			
-					return find.where().lt("id", Integer.valueOf(content_idx)).ilike("busTag", "%" + word + "%").eq("status", "Y")
+					return find.where().gt("id", Integer.valueOf(content_idx)).ilike("busTag", "%" + word + "%").eq("status", "Y")
 					.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 2:
 				if(content_idx.equals("0"))
 					return find.where().or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%")).eq("status", "Y")
 							.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().lt("id", Integer.valueOf(content_idx)).or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%")).eq("status", "Y")
+					return find.where().gt("id", Integer.valueOf(content_idx)).or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%")).eq("status", "Y")
 						.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 3:
 				if(content_idx.equals("0"))
 					return find.where().eq("status", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 4:
 				if(content_idx.equals("0"))
 					return find.where().eq("status", "Y").orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 5:
 				if(content_idx.equals("0"))
 					return find.where().eq("user_id", user_idx).eq("status", "Y").orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).eq("user_id", user_idx).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).eq("user_id", user_idx).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				
 		}
 		
 		if(content_idx.equals("0"))
 			return find.where().eq("status", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
-			return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
 	
