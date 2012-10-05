@@ -77,16 +77,16 @@ public class Contents extends Model{
 	
 	public static List<Contents> getContentList (String user_idx, String udid, String content_idx, String pSize) {
 		if(content_idx.equals("0"))
-			return find.where().orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
-			return find.where().gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
 	public static List<Contents> getBestContentList (String user_idx, String udid, String content_idx, String pSize) {
 		if(content_idx.equals("0"))
-			return find.where().eq("isBest", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").eq("isBest", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
-			return find.where().eq("isBest", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").eq("isBest", "Y").gt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
 	public static List<Contents> getContentListBySearch (String user_idx, String udid, String content_idx, String word, String mode, String pSize) {
@@ -98,49 +98,49 @@ public class Contents extends Model{
 		switch(Integer.parseInt(mode)) {
 			case 1:
 				if(content_idx.equals("0"))
-					return find.where().ilike("busTag", "%" + word + "%")
+					return find.where().ilike("busTag", "%" + word + "%").eq("status", "Y")
 							.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else			
-					return find.where().lt("id", Integer.valueOf(content_idx)).ilike("busTag", "%" + word + "%")
+					return find.where().lt("id", Integer.valueOf(content_idx)).ilike("busTag", "%" + word + "%").eq("status", "Y")
 					.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 2:
 				if(content_idx.equals("0"))
-					return find.where().or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%"))
+					return find.where().or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%")).eq("status", "Y")
 							.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().lt("id", Integer.valueOf(content_idx)).or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%"))
+					return find.where().lt("id", Integer.valueOf(content_idx)).or(Expr.ilike("contents", "%" + word + "%"), Expr.ilike("title", "%" + word + "%")).eq("status", "Y")
 						.orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 3:
 				if(content_idx.equals("0"))
-					return find.where().orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 4:
 				if(content_idx.equals("0"))
-					return find.where().orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().lt("id", Integer.valueOf(content_idx)).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 			case 5:
 				if(content_idx.equals("0"))
-					return find.where().eq("user_id", user_idx).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("user_id", user_idx).eq("status", "Y").orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				else
-					return find.where().lt("id", Integer.valueOf(content_idx)).eq("user_id", user_idx).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+					return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).eq("user_id", user_idx).orderBy("rec_count asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 				
 		}
 		
 		if(content_idx.equals("0"))
-			return find.where().orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 		else
-			return find.where().lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
+			return find.where().eq("status", "Y").lt("id", Integer.valueOf(content_idx)).orderBy("id asc").findPagingList(Integer.valueOf(pSize)).getPage(0).getList();
 	}
 	
 	
 	public static Contents getContent (String content_idx) {
-		return find.where().eq("id", Long.valueOf(content_idx)).findUnique();
+		return find.where().eq("status", "Y").eq("id", Long.valueOf(content_idx)).findUnique();
 	}
 	
 	public static Contents getContent (String user_idx, String udid, String title, String content, String busTag, String isNotice) {
-		return find.where().eq("user_id", Long.valueOf(user_idx)).eq("title", title).eq("contents", content).eq("bus_tag", busTag).eq("is_notice", isNotice).findUnique();
+		return find.where().eq("status", "Y").eq("user_id", Long.valueOf(user_idx)).eq("title", title).eq("contents", content).eq("bus_tag", busTag).eq("is_notice", isNotice).findUnique();
 	}
 	
 	public static Contents getContentDetail (String user_idx, String udid, String content_idx) {
