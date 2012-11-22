@@ -90,7 +90,7 @@ public class ProtoApp extends Controller {
 		DateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = null;
 		try {
-			date = sdFormat.parse(rSize);
+			date = sdFormat.parse(laReDate);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -240,6 +240,10 @@ public class ProtoApp extends Controller {
 			RecommandsObj result = new RecommandsObj(recommands);
 			return ok(new Gson().toJson(result));
 		}
+	}
+	
+	public static Result getImage(String path) {
+		return ok(new File(path));
 	}
 
 	public static Result recommandCancel(String user_idx, String udid,

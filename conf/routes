@@ -56,6 +56,8 @@ GET     /recommand/*user_idx/*udid/*content_idx              controllers.ProtoAp
 POST     /recommandCancel              controllers.Application.recommandCancel()
 GET     /recommandCancel/*user_idx/*udid/*content_idx              controllers.ProtoApp.recommandCancel(user_idx, udid, content_idx)
 
+GET     /getImage/*path              controllers.ProtoApp.getImage(path)
+
 
 
 # update content
